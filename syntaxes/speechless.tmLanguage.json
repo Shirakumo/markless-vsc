@@ -1,0 +1,25 @@
+{
+    "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
+    "name": "Speechless",
+    "scopeName": "source.speechless",
+    "injectionSelector": "L:",
+    "patterns": [
+	{"include": "#line_directive"}
+    ],
+    "repository": {
+        "line_directive": {
+            "patterns": [
+                {"include": "#jump"},
+                {"include": "#label"},
+                {"include": "#conditional"},
+            ]
+        },
+        "inline_directive": {
+            "patterns": [
+                {"include": "#placeholder"},
+                {"include": "#emote"},
+                {"include": "#conditional_part"},
+            ]
+        },
+    }
+}

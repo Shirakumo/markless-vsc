@@ -1,0 +1,35 @@
+{
+    "name": "markless",
+    "displayName": "markless",
+    "description": "Markless language syntax highlighting",
+    "version": "0.0.1",
+    "engines": {
+        "vscode": "^1.68.0"
+    },
+    "categories": [
+        "Programming Languages"
+    ],
+    "contributes": {
+        "languages": [{
+            "id": "markless",
+            "aliases": ["Markless", "markless"],
+            "extensions": [".mess"],
+            "configuration": "./language-configuration.json"
+        },{
+            "id": "speechless",
+            "aliases": ["Speechless", "speechless"],
+            "extensions": [".spess"],
+            "configuration": "./language-configuration.json"
+        }],
+        "grammars": [{
+            "language": "markless",
+            "scopeName": "source.markless",
+            "path": "./syntaxes/markless.tmLanguage.json"
+        },{
+            "language": "speechless",
+            "scopeName": "source.speechless",
+            "path": "./syntaxes/speechless.tmLanguage.json",
+            "inejectTo": ["source.markless"]
+        }]
+    }
+}

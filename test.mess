@@ -1,0 +1,22 @@
+# Test
+! set foo bar
+~ some guy
+| hello there
+- a one
+- and a two
+  and a
+1. yeah
+2. yeah
+3. yeah!
+- nested
+  - too!
+
+[ embed some-image.png ]
+
+**why** //not// __**eh**__?
+"this is red"(color red)
+and this is ``code``[1] but also
+[1] arguably
+:: whatever
+in a block
+::

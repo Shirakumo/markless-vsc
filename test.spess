@@ -1,0 +1,32 @@
+# Test
+! eval (setf some stuff)
+? have-water
+| ~ Fireman
+| | Quick, use the water to put out the fire!
+|? have-hose
+| ~ Fireman
+| | (:angry) Blast it!
+|?
+| ~ Fireman
+| | Someone get us some water, stat!
+"we can fix the water"(orange)
+! eval (spawn 'dog)
+| Hi, my name is {(name character)}!
+| [have-water Quick, use the water! | Get some water stat!]
+~ Hans
+| Are you getting this?
+- Yes
+  | Alright, are you ready for the next lesson?
+  - Let's go
+    | Wow, you're really blazing through this!
+  - No, not quite yet
+    | Ok, let's continue another time then
+- No
+  | What's bothering you?
+  - I just need more time
+    | Ok, no problem, let's try again another time then
+  - I'm hopelessly confused
+    | Give yourself some time then, come back to it later!
+  - I hate this
+    | Sorry to hear that. You don't have to continue if you don't want to!
+< test
