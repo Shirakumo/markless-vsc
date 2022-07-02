@@ -3,18 +3,18 @@
     "name": "Markless",
     "scopeName": "source.markless",
     "patterns": [
-	{"include": "#line_directive"}
+        {"include": "#line-directive"}
     ],
     "repository": {
-        "line_directive": {
+        "line-directive": {
             "patterns": [
                 {"include": "#header"},
-                {"include": "#horizontal_rule"},
+                {"include": "#horizontal-rule"},
                 {"include": "#blockquote"},
-                {"include": "#blockquote_header"},
-                {"include": "#unordered_list"},
-                {"include": "#ordered_list"},
-                {"include": "#code_block"},
+                {"include": "#blockquote-header"},
+                {"include": "#unordered-list"},
+                {"include": "#ordered-list"},
+                {"include": "#code-block"},
                 {"include": "#embed"},
                 {"include": "#instruction"},
                 {"include": "#comment"},
@@ -24,15 +24,19 @@
         },
         "header": {
             "name": "markup.heading.markless",
-            "match": "(^|\\G)(#+ ).*$",
+            "match": "(^|\\G)(#+ )(.*)$",
             "captures": {
-                "2": {"name": "punctuation.definition.heading.markless"}
+                "2": {"name": "punctuation.definition.heading.markless"},
+                "3": {
+                    "name": "entity.name.section.markdown",
+                    "patterns": [{"include": "#inline-directive"}]
+                }
             },
             "patterns": [
-                {"include": "#inline_directive"}
+                {"include": "#inline-directive"}
             ]
         },
-        "horizontal_rule": {
+        "horizontal-rule": {
             "name": "constant.other.rule.markless",
             "match": "(^|\\G)(==+)$"
         },
@@ -40,24 +44,24 @@
             "name": "markup.quote.markless",
             "begin": "(^|\\G)(\\| )",
             "while": "(^|\\G)(\\| )",
-            "beginCaptures": {
+            "captures": {
                 "2": {"name": "punctuation.definition.quote.begin.markless"}
             },
             "patterns": [
-                {"include": "#line_directive"}
+                {"include": "#line-directive"}
             ]
         },
-        "blockquote_header": {
+        "blockquote-header": {
             "name": "markup.other.source.markless",
-            "match": "(^|\\G)(~ )",
+            "match": "(^|\\G)(~ ).*$",
             "coptures": {
                 "2": {"name": "punctuation.definition.quote.source.markless"}
             },
             "patterns": [
-                {"include": "#inline_directive"}
+                {"include": "#inline-directive"}
             ]
         },
-        "unordered_list": {
+        "unordered-list": {
             "name": "markup.list.unnumbered.markless",
             "begin": "(^|\\G)(- )",
             "while": "(^|\\G)(  )",
@@ -65,10 +69,10 @@
                 "2": {"name": "punctuation.definition.list.begin.markless"}
             },
             "patterns": [
-                {"include": "#line_directive"}
+                {"include": "#line-directive"}
             ]
         },
-        "ordered_list": {
+        "ordered-list": {
             "name": "markup.list.numbered.markless",
             "begin": "(^|\\G)([0-9]+\\. )",
             "while": "(^|\\G)(  )",
@@ -76,19 +80,19 @@
                 "2": {"name": "punctuation.definition.list.begin.markless"}
             },
             "patterns": [
-                {"include": "#line_directive"}
+                {"include": "#line-directive"}
             ]
         },
-        "code_block": {
+        "code-block": {
             "name": "markup.fenced_code.block.markless",
             "begin": "(^|\\G)(::+)(.*)?$",
             "end": "(^|\\G)(\\2)$",
             "beginCaptures": {
-                "2": {"name": "punctuation.definition.markless"},
+                "2": {"name": "punctuation.definition.code_block.markless"},
                 "3": {"name": "fenced_code.block.language"}
             },
             "endCaptures": {
-                "2": {"name": "punctuation.definition.markless"}
+                "2": {"name": "punctuation.definition.code_block.markless"}
             }
         },
         "embed": {
@@ -120,17 +124,18 @@
                 "2": {"name": "punctuation.definition.footnote.markless"}
             },
             "patterns": [
-                {"include": "#inline_directive"}
+                {"include": "#inline-directive"}
             ]
         },
         "paragraph": {
             "name": "meta.paragraph.markless",
-            "match": "(^|\\G)[ ]*(?=\\S)",
+            "begin": "(^|\\G)[ ]{0,3}(?=\\S)",
+            "while": "(^|\\G)((?=\\s*[=]{2,}\\s*$)|[ ]{4,}(?=\\S))",
             "patterns": [
-                {"include": "#inline_directive"}
+                {"include": "#inline-directive"}
             ]
         },
-        "inline_directive": {
+        "inline-directive": {
             "patterns": [
                 {"include": "#bold"},
                 {"include": "#italic"},
@@ -142,109 +147,99 @@
                 {"include": "#supertext"},
                 {"include": "#url"},
                 {"include": "#compound"},
-                {"include": "#footnote_reference"},
+                {"include": "#footnote-reference"},
                 {"include": "#newline"}
             ]
         },
         "bold": {
             "name": "markup.bold.markless",
-            "begin": "(\\*\\*+)",
-            "end": "(\\1)",
-            "beginCaptures": {"1": {"name":"punctuation.definition.bold.markless"}},
-            "endCaptures": {"1": {"name":"punctuation.definition.bold.markless"}},
-            "patterns": [
-                {"include": "#italic"},
-                {"include": "#underline"},
-                {"include": "#strikethrough"},
-                {"include": "#code"},
-                {"include": "#dashes"},
-                {"include": "#subtext"},
-                {"include": "#supertext"},
-                {"include": "#url"},
-                {"include": "#compound"},
-                {"include": "#footnote_reference"},
-                {"include": "#newline"}
-            ]
+            "match": "(\\*\\*+)(.*?)(\\1)",
+            "captures": {
+                "1": {"name":"punctuation.definition.bold.markless"},
+                "3": {"name":"punctuation.definition.bold.markless"},
+                "2": {"patterns": [
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#strikethrough"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
         },
         "italic": {
             "name": "markup.italic.markless",
-            "begin": "(//+)",
-            "end": "(\\1)",
-            "beginCaptures": {"1": {"name":"punctuation.definition.italic.markless"}},
-            "endCaptures": {"1": {"name":"punctuation.definition.italic.markless"}},
-            "patterns": [
-                {"include": "#bold"},
-                {"include": "#underline"},
-                {"include": "#strikethrough"},
-                {"include": "#code"},
-                {"include": "#dashes"},
-                {"include": "#subtext"},
-                {"include": "#supertext"},
-                {"include": "#url"},
-                {"include": "#compound"},
-                {"include": "#footnote_reference"},
-                {"include": "#newline"}
-            ]
+            "match": "(//+)(.*?)(\\1)",
+            "captures": {
+                "1": {"name":"punctuation.definition.italic.markless"},
+                "3": {"name":"punctuation.definition.italic.markless"},
+                "2": {"patterns": [
+                    {"include": "#bold"},
+                    {"include": "#underline"},
+                    {"include": "#strikethrough"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
         },
         "underline": {
             "name": "markup.underline.markless",
-            "begin": "(__+)",
-            "end": "(\\1)",
-            "beginCaptures": {"1": {"name":"punctuation.definition.underline.markless"}},
-            "endCaptures": {"1": {"name":"punctuation.definition.underline.markless"}},
-            "patterns": [
-                {"include": "#italic"},
-                {"include": "#bold"},
-                {"include": "#strikethrough"},
-                {"include": "#code"},
-                {"include": "#dashes"},
-                {"include": "#subtext"},
-                {"include": "#supertext"},
-                {"include": "#url"},
-                {"include": "#compound"},
-                {"include": "#footnote_reference"},
-                {"include": "#newline"}
-            ]
+            "match": "(__+)(.*?)(\\1)",
+            "captures": {
+                "1": {"name":"punctuation.definition.underline.markless"},
+                "3": {"name":"punctuation.definition.underline.markless"},
+                "2": {"patterns": [
+                    {"include": "#italic"},
+                    {"include": "#bold"},
+                    {"include": "#strikethrough"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
         },
         "strikethrough": {
             "name": "markup.strikethrough.markless",
-            "begin": "<(-+)",
-            "end": "(\\1)>",
-            "beginCaptures": {"1": {"name":"punctuation.definition.strikethrough.markless"}},
-            "endCaptures": {"1": {"name":"punctuation.definition.strikethrough.markless"}},
-            "patterns": [
-                {"include": "#italic"},
-                {"include": "#underline"},
-                {"include": "#bold"},
-                {"include": "#code"},
-                {"include": "#dashes"},
-                {"include": "#subtext"},
-                {"include": "#supertext"},
-                {"include": "#url"},
-                {"include": "#compound"},
-                {"include": "#footnote_reference"},
-                {"include": "#newline"}
-            ]
+            "match": "(<(-+))(.*?)((\\2)>)",
+            "captures": {
+                "1": {"name":"punctuation.definition.strikethrough.markless"},
+                "4": {"name":"punctuation.definition.strikethrough.markless"},
+                "3": {"patterns": [
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#bold"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
         },
         "code": {
-            "name": "markup.raw.inline.markless",
-            "begin": "(``+)",
-            "end": "(\\1)",
-            "beginCaptures": {"1": {"name":"punctuation.definition.raw.inline.markless"}},
-            "endCaptures": {"1": {"name":"punctuation.definition.raw.inline.markless"}},
-            "patterns": [
-                {"include": "#italic"},
-                {"include": "#underline"},
-                {"include": "#strikethrough"},
-                {"include": "#bold"},
-                {"include": "#dashes"},
-                {"include": "#subtext"},
-                {"include": "#supertext"},
-                {"include": "#url"},
-                {"include": "#compound"},
-                {"include": "#footnote_reference"},
-                {"include": "#newline"}
-            ]
+            "name": "markup.inline.raw.string.markless",
+            "match": "(``+)(.*?)(\\1)",
+            "captures": {"1": {"name":"punctuation.definition.raw.inline.markless"},
+                         "3": {"name":"punctuation.definition.raw.inline.markless"}}
         },
         "dashes": {
             "patterns": [
@@ -256,49 +251,49 @@
         },
         "subtext": {
             "name": "markup.subtext.markless",
-            "begin": "(v\\()",
-            "end": "(\\))",
-            "beginCaptures": {"1": {"name":"punctuation.definition.subtext.markless"}},
-            "endCaptures": {"1": {"name":"punctuation.definition.subtext.markless"}},
-            "patterns": [
-                {"include": "#bold"},
-                {"include": "#italic"},
-                {"include": "#underline"},
-                {"include": "#strikethrough"},
-                {"include": "#code"},
-                {"include": "#dashes"},
-                {"include": "#subtext"},
-                {"include": "#supertext"},
-                {"include": "#url"},
-                {"include": "#compound"},
-                {"include": "#footnote_reference"},
-                {"include": "#newline"}
-            ]
+            "match": "(v\\()(.*?)(\\))",
+            "captures": {
+                "1": {"name":"punctuation.definition.subtext.markless"},
+                "3": {"name":"punctuation.definition.subtext.markless"},
+                "2": {"patterns": [
+                    {"include": "#bold"},
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#bold"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
         },
         "supertext": {
-            "name": "markup.supertext.markless",
-            "begin": "(^\\()",
-            "end": "(\\))",
-            "beginCaptures": {"1": {"name":"punctuation.definition.supertext.markless"}},
-            "endCaptures": {"1": {"name":"punctuation.definition.supertext.markless"}},
-            "patterns": [
-                {"include": "#bold"},
-                {"include": "#italic"},
-                {"include": "#underline"},
-                {"include": "#strikethrough"},
-                {"include": "#code"},
-                {"include": "#dashes"},
-                {"include": "#subtext"},
-                {"include": "#supertext"},
-                {"include": "#url"},
-                {"include": "#compound"},
-                {"include": "#footnote_reference"},
-                {"include": "#newline"}
-            ]
+            "name": "markup.subtext.markless",
+            "match": "(\\^\\()(.*?)(\\))",
+            "captures": {
+                "1": {"name":"punctuation.definition.subtext.markless"},
+                "3": {"name":"punctuation.definition.subtext.markless"},
+                "2": {"patterns": [
+                    {"include": "#bold"},
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#bold"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
         },
         "url": {
             "name": "markup.underline.link.markless",
-            "match": "[a-Z]+://[^<> ]+"
+            "match": "[a-zA-Z]+://[^<>\\s]+"
         },
         "compound": {
             "name": "meta.compound.markless",
@@ -317,11 +312,11 @@
                 {"include": "#supertext"},
                 {"include": "#url"},
                 {"include": "#compound"},
-                {"include": "#footnote_reference"},
+                {"include": "#footnote-reference"},
                 {"include": "#newline"}
             ]
         },
-        "footnote_reference": {
+        "footnote-reference": {
             "name": "variable.other.footnote.markless",
             "match": "\\[[0-9]+\\]"
         },

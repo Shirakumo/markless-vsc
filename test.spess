@@ -12,6 +12,7 @@
 "we can fix the water"(orange)
 ! eval (spawn 'dog)
 | Hi, my name is {(name character)}!
+| aou
 | [have-water Quick, use the water! | Get some water stat!]
 ~ Hans
 | Are you getting this?

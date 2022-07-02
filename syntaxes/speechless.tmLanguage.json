@@ -2,24 +2,337 @@
     "$schema": "https://raw.githubusercontent.com/martinring/tmlanguage/master/tmlanguage.json",
     "name": "Speechless",
     "scopeName": "source.speechless",
-    "injectionSelector": "L:",
     "patterns": [
-	{"include": "#line_directive"}
+        {"include": "#line-directive"}
     ],
     "repository": {
-        "line_directive": {
+        "line-directive": {
             "patterns": [
                 {"include": "#jump"},
                 {"include": "#label"},
                 {"include": "#conditional"},
+                {"include": "#header"},
+                {"include": "#blockquote"},
+                {"include": "#blockquote-header"},
+                {"include": "#unordered-list"},
+                {"include": "#instruction"},
+                {"include": "#comment"},
+                {"include": "#paragraph"}
             ]
         },
-        "inline_directive": {
+        "jump": {
+            "name": "meta.jump.speechless",
+            "match": "(^|\\G)(< )(.*)$",
+            "captures": {
+                "2": {"name": "punctuation.definition.jump.speechless"},
+                "3": {"name": "variable.parameter.label.speechless"}
+            }
+        },
+        "label": {
+            "name": "meta.label.speechless",
+            "match": "(^|\\G)(> )(.*)$",
+            "captures": {
+                "2": {"name": "punctuation.definition.label.speechless"},
+                "3": {"name": "variable.parameter.label.speechless"}
+            }
+        },
+        "conditional": {
+            "begin": "(^|\\G)(\\? )(.*)$",
+            "while": "(^|\\G)((\\| )|(\\|\\?)(.*)$)",
+            "beginCaptures": {
+                "2": {"name": "punctuation.definition.conditional.body.speechless"},
+                "3": {"name": "meta.expression.speechless"}
+            },
+            "whileCaptures": {
+                "3": {"name": "punctuation.definition.conditional.body.speechless"},
+                "4": {"name": "punctuation.definition.conditional.body.speechless"},
+                "5": {"name": "meta.expression.speechless"}
+            },
+            "patterns": [
+                {"include": "#line-directive"}
+            ]
+        },
+        "header": {
+            "name": "markup.heading.markless",
+            "match": "(^|\\G)(#+ )(.*)$",
+            "captures": {
+                "2": {"name": "punctuation.definition.heading.markless"},
+                "3": {
+                    "name": "entity.name.section.markdown",
+                    "patterns": [{"include": "#inline-directive"}]
+                }
+            },
+            "patterns": [
+                {"include": "#inline-directive"}
+            ]
+        },
+        "blockquote": {
+            "name": "markup.quote.markless",
+            "begin": "(^|\\G)(\\| )",
+            "while": "(^|\\G)(\\| )",
+            "captures": {
+                "2": {"name": "punctuation.definition.quote.begin.markless"}
+            },
+            "patterns": [
+                {"include": "#line-directive"}
+            ]
+        },
+        "blockquote-header": {
+            "name": "markup.other.source.markless",
+            "match": "(^|\\G)(~ ).*$",
+            "coptures": {
+                "2": {"name": "punctuation.definition.quote.source.markless"}
+            },
+            "patterns": [
+                {"include": "#inline-directive"}
+            ]
+        },
+        "unordered-list": {
+            "name": "markup.list.unnumbered.markless",
+            "begin": "(^|\\G)(- )",
+            "while": "(^|\\G)(  )",
+            "beginCaptures": {
+                "2": {"name": "punctuation.definition.list.begin.markless"}
+            },
+            "patterns": [
+                {"include": "#line-directive"}
+            ]
+        },
+        "instruction": {
+            "name": "markup.raw.instruction.markless",
+            "match": "(^|\\G)(\\! ).*$",
+            "captures": {
+                "2": {"name": "punctuation.definition.instruction.markless"}
+            }
+        },
+        "comment": {
+            "name": "comment.line.markless",
+            "match": "(^|\\G)(;+ ).*$",
+            "captures": {
+                "2": {"name": "punctuation.definition.comment.markless"}
+            }
+        },
+        "paragraph": {
+            "name": "meta.paragraph.markless",
+            "begin": "(^|\\G)[ ]{0,3}(?=\\S)",
+            "while": "(^|\\G)((?=\\s*[=]{2,}\\s*$)|[ ]{4,}(?=\\S))",
+            "patterns": [
+                {"include": "#inline-directive"}
+            ]
+        },
+        "inline-directive": {
             "patterns": [
                 {"include": "#placeholder"},
                 {"include": "#emote"},
-                {"include": "#conditional_part"},
+                {"include": "#conditional-part"},
+                {"include": "#bold"},
+                {"include": "#italic"},
+                {"include": "#underline"},
+                {"include": "#strikethrough"},
+                {"include": "#code"},
+                {"include": "#dashes"},
+                {"include": "#subtext"},
+                {"include": "#supertext"},
+                {"include": "#compound"},
+                {"include": "#newline"}
             ]
         },
+        "placeholder": {
+            "name": "meta.placeholder.speechless",
+            "match": "(\\{)([^}]+)(\\})",
+            "captures": {
+                "1": {"name": "punctuation.definition.placeholder.speechless"},
+                "2": {"name": "meta.expression.speechless"},
+                "3": {"name": "punctuation.definition.placeholder.speechless"}
+            }
+        },
+        "emote": {
+            "name": "meta.emote.speechless",
+            "match": "(\\(:)([^)]+)(\\))",
+            "captures": {
+                "1": {"name": "punctuation.definition.emote.speechless"},
+                "2": {"name": "variable.parameter.emote.speechless"},
+                "3": {"name": "punctuation.definition.emote.speechless"}
+            }
+        },
+        "conditional-part": {
+            "name": "meta.conditional.speechless",
+            "match": "(\\[)(\\(.*\\)|[^ ]+)([^|]+)((\\|)[^|\\]]*)+(])",
+            "captures": {
+                "1": {"name": "punctuation.definition.conditional.speechless"},
+                "2": {"name": "meta.expression.speechless"},
+                "5": {"name": "punctuation.definition.conditional.speechless"},
+                "6": {"name": "punctuation.definition.conditional.speechless"}
+            }
+        },
+        "bold": {
+            "name": "markup.bold.markless",
+            "match": "(\\*\\*+)(.*?)(\\1)",
+            "captures": {
+                "1": {"name":"punctuation.definition.bold.markless"},
+                "3": {"name":"punctuation.definition.bold.markless"},
+                "2": {"patterns": [
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#strikethrough"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
+        },
+        "italic": {
+            "name": "markup.italic.markless",
+            "match": "(//+)(.*?)(\\1)",
+            "captures": {
+                "1": {"name":"punctuation.definition.italic.markless"},
+                "3": {"name":"punctuation.definition.italic.markless"},
+                "2": {"patterns": [
+                    {"include": "#bold"},
+                    {"include": "#underline"},
+                    {"include": "#strikethrough"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
+        },
+        "underline": {
+            "name": "markup.underline.markless",
+            "match": "(__+)(.*?)(\\1)",
+            "captures": {
+                "1": {"name":"punctuation.definition.underline.markless"},
+                "3": {"name":"punctuation.definition.underline.markless"},
+                "2": {"patterns": [
+                    {"include": "#italic"},
+                    {"include": "#bold"},
+                    {"include": "#strikethrough"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
+        },
+        "strikethrough": {
+            "name": "markup.strikethrough.markless",
+            "match": "(<(-+))(.*?)((\\2)>)",
+            "captures": {
+                "1": {"name":"punctuation.definition.strikethrough.markless"},
+                "4": {"name":"punctuation.definition.strikethrough.markless"},
+                "3": {"patterns": [
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#bold"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
+        },
+        "code": {
+            "name": "markup.inline.raw.string.markless",
+            "match": "(``+)(.*?)(\\1)",
+            "captures": {"1": {"name":"punctuation.definition.raw.inline.markless"},
+                         "3": {"name":"punctuation.definition.raw.inline.markless"}}
+        },
+        "dashes": {
+            "patterns": [
+                {"name": "constant.language.dash.em.markless",
+                 "match": "---"},
+                {"name": "constant.language.dash.en.markless",
+                 "match": "--"}
+            ]
+        },
+        "subtext": {
+            "name": "markup.subtext.markless",
+            "match": "(v\\()(.*?)(\\))",
+            "captures": {
+                "1": {"name":"punctuation.definition.subtext.markless"},
+                "3": {"name":"punctuation.definition.subtext.markless"},
+                "2": {"patterns": [
+                    {"include": "#bold"},
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#bold"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#supertext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
+        },
+        "supertext": {
+            "name": "markup.subtext.markless",
+            "match": "(\\^\\()(.*?)(\\))",
+            "captures": {
+                "1": {"name":"punctuation.definition.subtext.markless"},
+                "3": {"name":"punctuation.definition.subtext.markless"},
+                "2": {"patterns": [
+                    {"include": "#bold"},
+                    {"include": "#italic"},
+                    {"include": "#underline"},
+                    {"include": "#bold"},
+                    {"include": "#code"},
+                    {"include": "#dashes"},
+                    {"include": "#subtext"},
+                    {"include": "#url"},
+                    {"include": "#compound"},
+                    {"include": "#footnote-reference"},
+                    {"include": "#newline"}
+                ]}
+            }
+        },
+        "compound": {
+            "name": "meta.compound.markless",
+            "begin": "(\")",
+            "end": "(\"\\(.*?\\))",
+            "beginCaptures": {"1": {"name":"punctuation.definition.compound.markless"}},
+            "endCaptures": {"1": {"name":"punctuation.definition.compound.markless"}},
+            "patterns": [
+                {"include": "#bold"},
+                {"include": "#italic"},
+                {"include": "#underline"},
+                {"include": "#strikethrough"},
+                {"include": "#code"},
+                {"include": "#dashes"},
+                {"include": "#subtext"},
+                {"include": "#supertext"},
+                {"include": "#url"},
+                {"include": "#compound"},
+                {"include": "#footnote-reference"},
+                {"include": "#newline"}
+            ]
+        },
+        "footnote-reference": {
+            "name": "variable.other.footnote.markless",
+            "match": "\\[[0-9]+\\]"
+        },
+        "newline": {
+            "name": "constant.language.newline.markless",
+            "match": "-/-"
+        }
     }
 }
