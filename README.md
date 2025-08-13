@@ -1,4 +1,4 @@
-# About
-This is an extension for Visual Studio Code, which implements syntax highlighting for the [Markless](https://shirakumo.github.io/markless) markup language, as well as its extension for dialogue scripting, [Speechless](https://shirakumo.github.io/speechless).
+# This repository has [moved](https://shirakumo.org/projects/markless-vsc)!
+Due to Microsoft's continued enshittification of the platform this repository has been moved to [Codeberg](https://shirakumo.org/projects/markless-vsc) in August of 2025. It will not receive further updates or patches. **Issues and pull requests will not be looked at here either**, please submit your patches and issue tickets on Codeberg, or send them directly via good old email patches to [shirakumo@tymoon.eu](mailto:shirakumo@tymoon.eu).
 
-The syntax will be active for files with the `.mess` and `.spess` extensions.
+Thanks.
